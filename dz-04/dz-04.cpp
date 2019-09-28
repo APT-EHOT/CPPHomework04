@@ -158,9 +158,9 @@ void task5() {
 	for (int j = 1; j <= 125; j++) {
 		double y;
 		if (j < 63)
-			y = round(sin(-jtox(j)) * 10) / 10;
+			y = round(cos(-jtox(j)) * 10) / 10;
 		else
-			y = round(sin(jtox(j)) * 10) / 10;
+			y = round(cos(jtox(j)) * 10) / 10;
 
 		func[ytoi(y) - 1][j - 1] = 1;
 	}
@@ -237,14 +237,52 @@ void task6() {
 			break;
 		}
 	}
+	int cnt = 0;
+	int num = 9;
+	bool error = 0;
 	for (int i = 0; i < encoded.size()-1; i++) {
+		if ((cnt > 1) && (encoded[i] > num)) {
+			error = 1;
+			break;
+		} else if (cnt > 3) {
+			error = 1;
+			break;
+		}
+
+		if (num == encoded[i]) {
+			cnt++;
+		} else {
+			cnt = 1;
+			num = encoded[i];
+		}
 		if (encoded[i] < encoded[i + 1])
 			output -= encoded[i];
 		else
 			output += encoded[i];
 	}
-	output += encoded.back();
-	cout << "\nВ арабской СС оно записывается как: " << output << "\n\n";
+	if (num == encoded[input.size() - 1]) {
+		cnt++;
+	}
+	else {
+		if ((cnt > 1) && (encoded[input.size() - 1] > num)) {
+			error = 1;
+		}
+		cnt = 1;
+		num = encoded[input.size() - 1];
+	}
+	 
+	
+	if (cnt > 3) {
+		error = 1;
+	}
+
+	if (!error) {
+		output += encoded.back();
+		cout << "\nВ арабской СС оно записывается как: " << output << "\n\n";
+	}
+	else {
+		cout << "\nНеправильный формат ввода числа!\n\n";
+	}
 }
 
 int pseudoRandomGen(int m, int i, int c) {
@@ -319,6 +357,13 @@ void task8() {
 				exchange += matrixC[i][j];
 			}
 		}
+	}
+	cout << "\nМатрица C: \t" << "\n";
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 2; j++) {
+			cout << matrixC[i][j] << "\t";
+		}
+		cout << "\n";
 	}
 
 	cout << "\nМаксимальная выручка у продавца: \t" << maxprofiter << "\n";
